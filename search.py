@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -70,7 +71,8 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem):
     """
@@ -89,15 +91,18 @@ def depthFirstSearch(problem):
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
+
 
 def nullHeuristic(state, problem=None):
     """
@@ -106,10 +111,42 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+
+    startNode = (problem.getStartState(), [], 0)
+    checkedNodes = []
+    queue = util.PriorityQueue()
+
+    if problem.isGoalState(startNode):
+        return []
+
+    queue.push(startNode, 0)
+
+    while not queue.isEmpty():
+        currentState, commands, cost = queue.pop()
+        checkedNodes.append((currentState, cost))
+
+        if problem.isGoalState(currentState):
+            return commands
+
+        else:
+            for nextState, move, myCost in problem.getSuccessors(currentState):
+                nextMove = commands + [move]
+                nextCost = problem.getCostOfActions(nextMove)
+                nextNode = (nextState, nextMove, nextCost)
+
+                already_explored = False
+                for x in checkedNodes:
+                    if (nextState == x[0]) and (nextCost >= x[1]):
+                        already_explored = True
+
+                if not already_explored:
+                    queue.push(nextNode, nextCost + heuristic(nextState, problem))
+                    checkedNodes.append((nextState, nextCost))
+
+
 
 
 # Abbreviations
